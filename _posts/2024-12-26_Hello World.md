@@ -1,11 +1,11 @@
 ---
-title: "Halo Dunia"
+title: "Hello World"
 date: 2024-12-26 17:14.00 +0700
-categories: [Halo Dunia]
+categories: [Hello World]
 tags: [first] [Hello World]
 ---
 
-#Halo Dunia
+# Hello World
 
-Hai. 
+Hai... 
 Ini adalah percobaan post pertama blog ini.
