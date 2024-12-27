@@ -1,9 +1,24 @@
 ---
-title: "Welcome to my homelab!"
-date: 2024-12-26 00:00:00 +0700
-categories: [homelab, hardware, software, router, firewall, pfsense]
+title: "Welcome to my homelab! - The Begining"
+date: 2024-12-27 00:00:00 +0700
+categories: [homelab, router]
 tags: [homelab, firewall, router, pfsense]
 ---
+
+Halo..
+Ini adalah catatan instalasi firewall router di homelab saya.
+
+Berawal dari speed ISP FTTH rumah yang naik-turun, akhirnya saya coba cek RX level di router dengan OPM. Ternyata normal, sekitar -7dBm, masih di threshold SLA mereka.
+Oke, coba pantau traffic di wireshark. Dan voila, banyak traffic ke domain yang tidak perlu, dan tampaknya setting firewall router ISP di "Strict" tidak mampu menyelesaikan masalah. Baik, saya perlu firewall sendiri.
+
+Mengadopsi next gen firewall tentu bukan pilihan yang tepat buat traffic rumahan. Apalagi menilik harganya. Ndak cocok, walaupun pasti keren sekali. Jadilah saya pakai alternatifnya. Ada beberapa hardware ex thin client dan laptop/PC tua di gudang. Mari disalah gunakan..
+
+Saya memilih salah satu solusi dengan pfSense dari Netgate karena tersedia versi free dengan fitur yang saya nilai sangat cukup buat kebutuhan saya. Sebuah laptop tua "buntung" AMD E-450 dengan RAM DDR3l 2GB saya pilih buat hardwarenya. Buntung disini karena disamping batt yang mati, pun keyboard-nya juga tidak berfungsi. Tapi bukan masalah, pfSense bisa tetap kita akses baik via ssh atau pun web. Hanya CPU ini tidak support instruksi kriptografi AES-NI yang diperlukan buat VPN nantinya. Tapi untuk trial, masih oke lah. 
+
+
+
+![Logo pfSense](https://cdn.brandfetch.io/idZVqCtze8/w/820/h/244/theme/dark/logo.png)
+
 
 **Panduan Lengkap pfSense: Solusi Firewall dan Router Hemat Biaya dengan Perangkat Lama**
 
@@ -65,4 +80,9 @@ Setelah pfSense berjalan, Anda dapat mulai memanfaatkan fitur-fiturnya:
 ### Kesimpulan
 
 pfSense adalah solusi hemat biaya yang memungkinkan Anda membangun sistem keamanan jaringan yang handal dengan menggunakan perangkat keras bekas. Dengan sedikit usaha dan pemahaman, pfSense dapat menjadi andalan untuk mengelola jaringan rumah atau bisnis kecil. Jangan ragu untuk mencoba dan eksplorasi fitur-fiturnya, karena keamanan jaringan adalah investasi yang tidak ternilai harganya.
+
+Untuk add-on di system ini saya hunakan Squid, pfBlockerNG, dan Snort. Untuk ini nanti saya bahas lain kali.
+
+
+Salam..
 
