@@ -7,7 +7,7 @@ tags: [first, Hello World]
 
 
 
-Halo..
+Halo semua..
 
 Ini adalah percobaan post pertama blog ini.
 
