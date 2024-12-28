@@ -1,5 +1,5 @@
 ---
-title: "Welcome to my homelab! - Prelude"
+title: "Welcome to my homelab! - A Prelude"
 date: 2024-12-28 00:00:00 +0700
 categories: [homelab]
 tags: [homelab, why]
@@ -69,7 +69,7 @@ Home lab komputer adalah lingkungan IT pribadi yang digunakan untuk eksperimen, 
 
    - **Peralatan Jaringan**:
      - Router atau switch sederhana (managed switch untuk lab jaringan).
-     - UTP kabel dan RJ45 dan perlatan crimping nya.
+     - UTP kabel dan RJ45 dan peralatan crimping nya.
      - Jika ada rak khusus tentu akan baik, kalau tidak ada tidak masalah, tapi pastikan aman dari gangguan fisik.
      - Raspberry Pi atau Arduino semacamnya beserta interface nya untuk proyek IoT.
 
