@@ -1,6 +1,6 @@
 ---
 title: "Hybrid Computing"
-date: 2024-12-29 00:00:00 +0700
+date: 2024-12-29 05:00:00 +0700
 categories: [homelab, virtualization]
 tags: [homelab, virtualization, proxmox.lxc, vm]
 ---
@@ -9,7 +9,7 @@ tags: [homelab, virtualization, proxmox.lxc, vm]
 
 Setelah install, setup, dan config semua instances di mikro datacenter (ciye) on premise kita selesai, rasanya ada timbul penasaran bagaimana kalau resource yang ada ini dipadu dengan resource dari layanan cloud seperti AWS. Apakah onggokan dua PC tua ini bisa bekerja baik? Seperti apa sih hybrid computing itu?  
 
-Not: Untuk ini baru saya start coba lakukan. Page ini adalah sementara hal yang bisa saya konpilasi untuk memulai.
+Note: Untuk ini baru saya start coba lakukan. Page ini adalah sementara hal yang bisa saya konpilasi untuk memulai.
 
 ### **Membangun Hybrid Computing antara Proxmox VE Cluster dan AWS**
 
