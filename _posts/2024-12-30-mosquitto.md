@@ -1,5 +1,5 @@
 ---
-title: "Welcome to my homelab! - Micro Datacenter 3"
+title: "Welcome to my homelab! - Mosquitto"
 date: 2024-12-30 00:00:00 +0700
 categories: [homelab, server]
 tags: [homelab, server, proxmox.lxc, vm, mosquitto]
