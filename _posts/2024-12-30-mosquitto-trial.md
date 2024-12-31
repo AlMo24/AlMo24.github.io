@@ -10,7 +10,7 @@ tags: [IOT, server, proxmox, mosquitto]
 ### **Hardware Setup**
 
 #### **Components Required:**
-- 2 x ESP32 Devkit-C boards or any type available
+- 2 x ESP32 Devkit-C boards
 - 2 x DHT22 temperature and humidity sensors
 - Jumper wires
 - Breadboards
@@ -138,4 +138,145 @@ Use the same wiring and setup process for Device 2.
    - `device1/temperature_humidity`
    - `device2/temperature_humidity`
 4. Verify that temperature and humidity data from both devices are being published to the respective topics.
+
+---
+
+### **Setting Up a Database Service on Proxmox VE to Store Data**
+
+#### **Step 1: Install a Database Service on Proxmox VE**
+
+1. **Create a VM or LXC Container for the Database**:
+   - Follow the process in Proxmox to create a VM or LXC container.
+   - Allocate resources (1 vCPU, 1GB RAM, 10GB storage).
+   - Install Ubuntu Server or Debian OS.
+
+2. **Install MySQL or MariaDB**:
+   - SSH into the VM or container.
+   - Update packages:
+     ```bash
+     sudo apt update && sudo apt upgrade -y
+     ```
+   - Install the database service:
+     ```bash
+     sudo apt install mariadb-server -y
+     ```
+
+3. **Secure the Installation**:
+   - Run the security script:
+     ```bash
+     sudo mysql_secure_installation
+     ```
+   - Follow the prompts to set a root password and secure the installation.
+
+4. **Create a Database and Table**:
+   - Access MySQL:
+     ```bash
+     sudo mysql -u root -p
+     ```
+   - Create a database and table:
+     ```sql
+     CREATE DATABASE mqtt_data;
+     USE mqtt_data;
+
+     CREATE TABLE sensor_readings (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       date DATE NOT NULL,
+       time TIME NOT NULL,
+       source_device VARCHAR(50),
+       temperature FLOAT,
+       humidity FLOAT
+     );
+     ```
+   - Exit MySQL:
+     ```sql
+     EXIT;
+     ```
+
+---
+
+#### **Step 2: Write Data to the Database from MQTT**
+
+1. **Install Python and Required Libraries**:
+   - Install Python and pip:
+     ```bash
+     sudo apt install python3 python3-pip -y
+     ```
+   - Install libraries for MQTT and MySQL:
+     ```bash
+     pip3 install paho-mqtt mysql-connector-python
+     ```
+
+2. **Create a Python Script to Subscribe and Write Data**:
+   - Save the following script as `mqtt_to_db.py`:
+     ```python
+     import paho.mqtt.client as mqtt
+     import mysql.connector
+     from datetime import datetime
+
+     # MQTT settings
+     MQTT_BROKER = "YOUR_MQTT_BROKER_IP"
+     MQTT_TOPIC = ["device1/temperature_humidity", "device2/temperature_humidity"]
+
+     # Database settings
+     db = mysql.connector.connect(
+         host="localhost",
+         user="YOUR_DB_USER",
+         password="YOUR_DB_PASSWORD",
+         database="mqtt_data"
+     )
+     cursor = db.cursor()
+
+     def on_connect(client, userdata, flags, rc):
+         print(f"Connected with result code {rc}")
+         for topic in MQTT_TOPIC:
+             client.subscribe(topic)
+
+     def on_message(client, userdata, msg):
+         payload = msg.payload.decode()
+         print(f"Received `{payload}` from `{msg.topic}` topic")
+
+         # Parse data
+         data = eval(payload)
+         temperature = data["temperature"]
+         humidity = data["humidity"]
+         source_device = msg.topic.split("/")[0]
+         
+         # Get current date and time
+         now = datetime.now()
+         date = now.strftime("%Y-%m-%d")
+         time = now.strftime("%H:%M:%S")
+
+         # Insert data into the database
+         cursor.execute(
+             "INSERT INTO sensor_readings (date, time, source_device, temperature, humidity) VALUES (%s, %s, %s, %s, %s)",
+             (date, time, source_device, temperature, humidity)
+         )
+         db.commit()
+
+     client = mqtt.Client()
+     client.on_connect = on_connect
+     client.on_message = on_message
+
+     client.connect(MQTT_BROKER, 1883, 60)
+
+     client.loop_forever()
+     ```
+
+3. **Run the Script**:
+   - Execute the script to start subscribing and writing data:
+     ```bash
+     python3 mqtt_to_db.py
+     ```
+
+---
+
+### **Testing the Integration**
+1. Ensure MQTT broker and database services are running.
+2. Use MQTT clients to publish test messages to the topics.
+3. Verify that the data is written into the database by querying the table:
+   ```sql
+   SELECT * FROM mqtt_data.sensor_readings;
+   ```
+
+This setup ensures data from the ESP32 devices is securely stored in a database for further analysis.
 
