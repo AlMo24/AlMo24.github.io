@@ -1,5 +1,5 @@
 ---
-title: "IOT - Network Design Planning
+title: "IOT - Network Design Planning"
 date: 2025-01-01 01:00:00 +0700
 categories: [IOT, network-planning]
 tags: [IOT, server, proxmox, security, network]
