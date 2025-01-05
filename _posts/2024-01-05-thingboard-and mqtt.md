@@ -273,4 +273,92 @@ Both approaches have their advantages, and the choice depends on your specific r
 
 ### **How to Decide?**
 - Start with **fully integrated ThingsBoard** if you're prototyping or managing a small number of devices.
-- Transition to **ThingsBoard + Mosquitto** as your system grows or requires advanced MQTT features.
+- Transition to **ThingsBoard + Mosquitto** as your system grows or requires advanced MQTT features.  
+
+But will all of these work with the free community version of thingsboard?
+
+Yes, the **community version of ThingsBoard** supports integration with an external MQTT broker like Mosquitto. While the community version lacks some advanced features available in the professional and enterprise editions (e.g., advanced rule chains, high availability, or complex security setups), it fully supports MQTT communication for telemetry, attribute updates, and RPC (Remote Procedure Calls).
+
+### **How to Make It Work with the Community Version:**
+
+#### **1. ThingsBoard Community Features Relevant to MQTT:**
+   - **Telemetry Upload:** Send data from devices to ThingsBoard via MQTT.
+   - **Attributes Update:** Update device attributes (shared or client-side).
+   - **RPC Calls:** Send remote procedure calls to devices via MQTT.
+   - **Rule Engine:** Process incoming messages using rule chains.
+
+---
+
+### **Steps to Integrate Mosquitto with ThingsBoard Community Edition:**
+
+#### **1. Install and Configure ThingsBoard Community Edition**
+   - Install ThingsBoard on your Proxmox VE LXC or VM.
+   - Follow the [official installation guide](https://thingsboard.io/docs/user-guide/install/).
+
+#### **2. Install and Configure Mosquitto**
+   - Install Mosquitto on the same or a separate LXC/VM in Proxmox.
+   - Configure the Mosquitto broker by editing its configuration file (`/etc/mosquitto/mosquitto.conf`):
+     ```bash
+     listener 1883
+     allow_anonymous true  # Use authentication for better security
+     persistence true
+     ```
+   - Restart Mosquitto:
+     ```bash
+     sudo systemctl restart mosquitto
+     ```
+
+#### **3. Configure ThingsBoard to Use External MQTT Broker**
+   - Modify the ThingsBoard configuration file (`thingsboard.yml`):
+     ```yaml
+     transport:
+       mqtt:
+         enabled: true
+         bind_address: 0.0.0.0
+         external:
+           enabled: true
+           broker_url: tcp://<MOSQUITTO_BROKER_IP>:1883
+     ```
+   - Restart the ThingsBoard service:
+     ```bash
+     sudo service thingsboard restart
+     ```
+
+#### **4. Connect ESP32 Devices to Mosquitto**
+   - Update the ESP32 code to publish telemetry data to the Mosquitto broker. Ensure the MQTT topic format aligns with ThingsBoard expectations:
+     ```cpp
+     const char* mqtt_topic = "v1/devices/me/telemetry";
+     ```
+
+#### **5. Provision Devices in ThingsBoard**
+   - Create devices in the ThingsBoard dashboard.
+   - Copy the **access token** for each device and use it in the ESP32 code to authenticate with ThingsBoard via the Mosquitto broker:
+     ```cpp
+     const char* token = "YOUR_DEVICE_ACCESS_TOKEN";
+     ```
+
+#### **6. Test the Setup**
+   - Ensure that the ESP32 devices publish telemetry to the Mosquitto broker.
+   - Verify that ThingsBoard receives and processes the data from the Mosquitto broker.
+
+---
+
+### **Best Practices for Using ThingsBoard Community with Mosquitto**
+
+1. **Security:**
+   - Enable **username/password authentication** or **TLS** in Mosquitto for secure communication.
+   - Use secure WebSockets if integrating web clients.
+
+2. **Persistence:**
+   - Configure persistence in Mosquitto to prevent message loss during broker restarts.
+
+3. **Performance Monitoring:**
+   - Monitor the performance of both Mosquitto and ThingsBoard to ensure smooth operation.
+
+4. **Rule Chains:**
+   - Use ThingsBoard's rule chains to process and visualize incoming data efficiently.
+
+---
+
+### **Conclusion:**
+Yes, ThingsBoard Community Edition works seamlessly with Mosquitto. This combination offers flexibility, scalability, and robust MQTT message handling for most IoT projects, even in a hybrid setup with Proxmox VE.
