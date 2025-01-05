@@ -275,7 +275,7 @@ Both approaches have their advantages, and the choice depends on your specific r
 - Start with **fully integrated ThingsBoard** if you're prototyping or managing a small number of devices.
 - Transition to **ThingsBoard + Mosquitto** as your system grows or requires advanced MQTT features.  
 
-But will all of these work with the free community version of thingsboard?
+But will all of these work with the free community version of ThingsBoard?
 
 Yes, the **community version of ThingsBoard** supports integration with an external MQTT broker like Mosquitto. While the community version lacks some advanced features available in the professional and enterprise editions (e.g., advanced rule chains, high availability, or complex security setups), it fully supports MQTT communication for telemetry, attribute updates, and RPC (Remote Procedure Calls).
 
