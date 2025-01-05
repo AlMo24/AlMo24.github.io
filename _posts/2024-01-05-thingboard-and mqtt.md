@@ -1,5 +1,5 @@
 ---
-title: "IOT - ThingBoard or Mosquitto?"
+title: "IOT - ThingsBoard or Mosquitto?"
 date: 2025-01-05 00:00:00 +0700
 categories: [IOT, server]
 tags: [IOT, server, proxmox, thingsboard, mosquitto]
