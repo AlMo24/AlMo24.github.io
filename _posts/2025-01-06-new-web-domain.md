@@ -32,7 +32,49 @@ A new web domain opens up a world of possibilities for personal and professional
 6. **Integrate Security and Performance Enhancements:**
    - Use services like Cloudflare to secure and optimize your site.
 
-In this article, we'll explore how to integrate a GitHub-hosted project with Cloudflare Zero Trust for security and deploy subdomains effectively.
+
+Here we'll explore how to integrate a GitHub-hosted project with Cloudflare Zero Trust for security and deploy subdomains effectively.  
+But which one is better from the security perspective, directly link your github to your domain, or clone it first to a Proxmox lxc?
+
+From a security perspective, **cloning your GitHub repository to a Proxmox LXC (Linux Container)** and serving the content from there is generally better than directly linking GitHub to your domain. Here’s why:
+
+---
+
+### 1. **Key Security Considerations**
+
+#### **Directly Linking GitHub to Your Domain**
+   - **Pros:**
+     - Easy to set up with GitHub Pages or a GitHub Action.
+     - Automated deployment ensures changes are reflected immediately.
+   - **Cons:**
+     - If your GitHub account is compromised, attackers could modify your site directly.
+     - Public repositories expose your source code to everyone.
+     - Limited control over the hosting environment and its security configuration.
+   
+#### **Using Proxmox LXC**
+   - **Pros:**
+     - Enhanced security through isolation. Even if one container is compromised, it won't affect the host or other services.
+     - Complete control over the server environment, allowing you to harden security (e.g., disabling unused services, enforcing strict file permissions).
+     - Private repository cloning adds another layer of protection by keeping sensitive code away from public access.
+   - **Cons:**
+     - Slightly more complex setup and maintenance.
+     - Requires monitoring and patching the server regularly.
+
+---
+
+### 2. **Security Recommendations for Each Approach**
+
+#### **If You Choose Directly Linking GitHub to Your Domain:**
+   - Use **private repositories** for sensitive projects.\n   - Enable **2FA (Two-Factor Authentication)** on your GitHub account.\n   - Use **branch protection rules** to prevent unauthorized changes.\n   - Deploy using **GitHub Actions with secrets management** to avoid exposing sensitive data.\n   - Use **Cloudflare or another WAF (Web Application Firewall)** to protect against DDoS and other web attacks.
+
+#### **If You Choose Proxmox LXC:**
+   - Secure the Proxmox server:\n     - Use **strong SSH keys** for remote access.\n     - Enable a **firewall** and restrict access to only necessary services.\n     - Keep the host and container OS updated.\n   - Clone the GitHub repository into a private container.\n   - Use **container snapshots** to quickly recover from any compromise.\n   - Serve the content using a reverse proxy like **NGINX** or **Traefik** with **TLS encryption** (HTTPS).
+   - Restrict container access using **Cloudflare Zero Trust** to enforce strict access controls.
+
+---
+
+### 3. **Recommendation: Proxmox LXC for Sensitive Projects**
+If your project requires robust security, Proxmox LXC is the better choice because it provides isolation, private hosting, and complete control over the environment. For simple, public-facing projects without sensitive data, GitHub Pages or direct deployment is sufficient when properly secured.
 
 ---
 
@@ -54,7 +96,7 @@ Cloudflare Zero Trust is a robust solution for securing your web applications by
 ### Step 2: Configure Cloudflare for Your Domain
 
 1. **Add Your Domain to Cloudflare:**
-   - Sign up and/or log in to your Cloudflare.
+   - Sign up or log in to Cloudflare.
    - Add your domain by following the on-screen instructions.
    - Update your domain registrar’s DNS settings to point to Cloudflare’s nameservers.
 
@@ -103,6 +145,74 @@ jobs:
 
 2. **Monitor and Verify Deployment:**
    - Check the Cloudflare dashboard for successful deployments.
+
+---
+
+## Setting Up a Proxmox LXC for Hosting
+
+Proxmox is a powerful platform for managing virtual machines and containers. Here’s a step-by-step guide to setting up a Proxmox LXC for hosting your project.
+
+### Step 1: Install Proxmox (If you haven't already)
+
+1. **Download the Proxmox ISO:**
+   - Visit the [Proxmox website](https://www.proxmox.com/) and download the latest ISO image.
+
+2. **Install Proxmox on Your Server:**
+   - Create a bootable USB drive with the ISO.
+   - Boot your server from the USB and follow the installation wizard.
+
+3. **Access the Proxmox Web Interface:**
+   - Open a browser and navigate to `https://<your-server-ip>:8006`.
+   - Log in with the root credentials you set during installation.
+
+### Step 2: Create an LXC Container
+
+1. **Download a Template:**
+   - In the Proxmox web interface, go to `Local > Content > Templates`.
+   - Download a Linux distribution template (e.g., Ubuntu or Debian).
+
+2. **Create the Container:**
+   - Go to `Create CT` and fill in the details:
+     - Container ID and hostname.
+     - Root password.
+     - Select the downloaded template.
+     - Allocate resources (CPU, RAM, disk space).
+
+3. **Start the Container:**
+   - Once created, start the container and access it via the console.
+
+### Step 3: Clone Your GitHub Repository
+
+1. **Install Git in the Container:**
+   - Run: `apt update && apt install git`
+
+2. **Clone the Repository:**
+   - Run: `git clone https://github.com/yourusername/yourrepository.git`
+
+### Step 4: Set Up a Web Server
+
+1. **Install NGINX or Apache:**
+   - Run: `apt install nginx` (or `apt install apache2` for Apache).
+
+2. **Configure the Web Server:**
+   - Place your project files in `/var/www/html` or configure a virtual host.
+   - Ensure the web server is running: `systemctl start nginx`.
+
+### Step 5: Secure Your LXC
+
+1. **Enable HTTPS:**
+   - Use `certbot` to obtain a free SSL certificate:
+     - Run: `apt install certbot python3-certbot-nginx`
+     - Follow the prompts to secure your site.
+
+2. **Restrict Access:**
+   - Use UFW (Uncomplicated Firewall) to allow only necessary ports:
+     - Run: `ufw allow 80`
+     - Run: `ufw allow 443`
+     - Run: `ufw enable`
+
+3. **Backup Regularly:**
+   - Use Proxmox’s built-in backup tools to create snapshots of your container.
 
 ---
 
