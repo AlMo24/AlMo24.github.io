@@ -65,10 +65,20 @@ From a security perspective, **cloning your GitHub repository to a Proxmox LXC (
 ### 2. **Security Recommendations for Each Approach**
 
 #### **If You Choose Directly Linking GitHub to Your Domain:**
-   - Use **private repositories** for sensitive projects.\n   - Enable **2FA (Two-Factor Authentication)** on your GitHub account.\n   - Use **branch protection rules** to prevent unauthorized changes.\n   - Deploy using **GitHub Actions with secrets management** to avoid exposing sensitive data.\n   - Use **Cloudflare or another WAF (Web Application Firewall)** to protect against DDoS and other web attacks.
+   - Use **private repositories** for sensitive projects.
+   - Enable **2FA (Two-Factor Authentication)** on your GitHub account.
+   - Use **branch protection rules** to prevent unauthorized changes.
+   - Deploy using **GitHub Actions with secrets management** to avoid exposing sensitive data.
+   - Use **Cloudflare or another WAF (Web Application Firewall)** to protect against DDoS and other web attacks.
 
 #### **If You Choose Proxmox LXC:**
-   - Secure the Proxmox server:\n     - Use **strong SSH keys** for remote access.\n     - Enable a **firewall** and restrict access to only necessary services.\n     - Keep the host and container OS updated.\n   - Clone the GitHub repository into a private container.\n   - Use **container snapshots** to quickly recover from any compromise.\n   - Serve the content using a reverse proxy like **NGINX** or **Traefik** with **TLS encryption** (HTTPS).
+   - Secure the Proxmox server:
+   - Use **strong SSH keys** for remote access.
+   - Enable a **firewall** and restrict access to only necessary services.
+   - Keep the host and container OS updated.
+   - Clone the GitHub repository into a private container.
+   - Use **container snapshots** to quickly recover from any compromise.
+   - Serve the content using a reverse proxy like **NGINX** or **Traefik** with **TLS encryption** (HTTPS).
    - Restrict container access using **Cloudflare Zero Trust** to enforce strict access controls.
 
 ---
