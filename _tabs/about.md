@@ -4,7 +4,7 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-#Yeah.. Kinda forgot to update this page.. :D
+#Yeah.. Kinda forgot to update this page.. :D  
 First of all, thanks for visiting! I hope you'll find something useful here.
 
 This blog was originally intended to be a subdomain of my website, serving as a guide to document how I built the entire site. It's primarily for my own reference, a personal record of what I've learned and done, rather than a platform for engagement. That's why I haven't included a comment section on each post. If you have questions, feel free to shoot me an email or send me a direct message on my social media.
